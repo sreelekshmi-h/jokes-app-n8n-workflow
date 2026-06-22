@@ -1,4 +1,4 @@
-# Day 6 Submission – n8n Joke Generator
+# Day 8 Submission – n8n Joke Generator
 
 Build a simple Joke Generator workflow using n8n.
 
