@@ -1,0 +1,93 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "37d63401-35a0-43a5-9874-0f67759f6443",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://official-joke-api.appspot.com/random_joke",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "6c01828c-ded2-4889-8ca5-e72d37ce790e",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "fromEmail": "sidharthvjain@gmail.com",
+        "toEmail": "sidharthsgdrive@gmail.com",
+        "subject": "Joke",
+        "emailFormat": "text",
+        "text": "=Setup:  {{ $json.setup }}\nPunchline: {{ $json.punchline }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "8ae2a3c4-8c5e-430a-9d03-be32dd0a149a",
+      "name": "Send an Email",
+      "webhookId": "0f3e9d22-7803-4080-b561-618ceb3908e1",
+      "credentials": {
+        "smtp": {
+          "id": "HZRnBajyVfOnMloZ",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "11f1554b-2964-495c-b0d7-822a9eb0ed56",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2f9cc00633ff2400a5fccc061871bb869794fc3d67d0abebaa7df07c1f61b213"
+  },
+  "nodeGroups": [],
+  "id": "TgvILP3XisEbb9O0",
+  "tags": []
+}
