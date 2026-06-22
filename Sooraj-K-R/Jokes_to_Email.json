@@ -1,0 +1,267 @@
+{
+  "name": "Jokes_to_Email",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -192
+      ],
+      "id": "1849eb7d-6aab-43c7-969a-9c9bc41bd2ce",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://official-joke-api.appspot.com/random_joke",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        224,
+        -192
+      ],
+      "id": "83f1087e-98c6-44b8-a32e-edf43c842771",
+      "name": "HTTP Request",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "85280a3f-e3e7-490c-9f9d-812b8fcb1c51",
+              "leftValue": "={{ $json.setup }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        -272
+      ],
+      "id": "d57fd807-c2dc-4ad8-b254-c2e80d3c8e5d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "eb9b68a7-476f-47e2-a2b6-242917e53122",
+              "leftValue": "={{ $json.setup.length }}",
+              "rightValue": 15,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "5a38b180-04f1-4bd9-89c1-b8c2e9123432",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e2ce98bf-23f7-48b3-acc0-1a37ba476a40",
+              "name": "EmailSubject",
+              "value": "=Here is your {{ $json.type }} joke of the day!",
+              "type": "string"
+            },
+            {
+              "id": "ee66a8ab-7138-4f6e-a30e-56f5a1ca2e78",
+              "name": "FormattedJoke",
+              "value": "=Setup: {{ $json.setup }} <br><br> Punchline: {{ $json.punchline }}",
+              "type": "string"
+            },
+            {
+              "id": "edbb9e41-4d29-490c-b30b-990fdc49d1b1",
+              "name": "CurrentTime",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        -96
+      ],
+      "id": "fc7700dd-4632-4133-b69a-2cbcebb230f8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "fromEmail": "krsooraj465@gmail.com",
+        "toEmail": "krsooraj465@gmail.com",
+        "subject": "={{ $json.EmailSubject }}",
+        "html": "={{ $json.FormattedJoke }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        -96
+      ],
+      "id": "9ab65ec5-a66f-47bc-a6d9-0eb2cad4af3e",
+      "name": "Send an Email",
+      "webhookId": "e1338498-f622-44c5-8e10-b9eb64250d92",
+      "credentials": {
+        "smtp": {
+          "id": "ybPUlLwQmnbqOB9W",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "krsooraj465@gmail.com",
+        "toEmail": "krsooraj465@gmail.com",
+        "subject": "API-Error",
+        "html": "The API has stopped working",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        -320
+      ],
+      "id": "b51c68c6-1013-4795-82c3-dbd384200406",
+      "name": "Send an Email1",
+      "webhookId": "fa41828e-6b56-4614-a96a-1193e9123be0",
+      "credentials": {
+        "smtp": {
+          "id": "ybPUlLwQmnbqOB9W",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send an Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "77649b78-eefe-4de7-88b0-aa51ace4ecb6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "05b114f7d7e1721f430aae4cc28180f713e05fce93f7f905a4dcfc2213761d2b"
+  },
+  "nodeGroups": [],
+  "id": "01JRTX03RnOpWbUw",
+  "tags": []
+}
